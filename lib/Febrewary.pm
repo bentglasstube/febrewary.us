@@ -47,6 +47,10 @@ get '/photos' => sub {
   template 'photos';
 };
 
+get '/logos' => sub {
+  template 'logos';
+};
+
 any qr/.*/ => sub {
   template '404';
 };
