@@ -22,11 +22,15 @@ get '/guests' => sub {
 };
 
 post '/guests' => sub {
-  database->quick_insert(
-    rsvp => {
-      name   => param('name'),
-      guests => param('count'),
-    });
+  if (param('name')) {
+    database->quick_insert(
+      rsvp => {
+        name   => param('name'),
+        guests => param('count') || 1,
+        email  => param('email') || '',
+        time   => time,
+      });
+  }
 
   redirect '/guests', 301;
 };
