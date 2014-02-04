@@ -15,3 +15,17 @@ h1 {
 form {
   text-align: center;
 }
+
+ul.nav {
+  text-align: center;
+  width: 100%;
+  margin: auto;
+}
+
+ul.nav li {
+  display: inline;
+}
+
+ul.nav a {
+  display: inline;
+}

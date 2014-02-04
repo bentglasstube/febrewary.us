@@ -35,6 +35,18 @@ post '/guests' => sub {
   redirect '/guests', 301;
 };
 
+get '/details' => sub {
+  template 'details';
+};
+
+get '/brewers' => sub {
+  template 'brewers';
+};
+
+get '/photos' => sub {
+  template 'photos';
+};
+
 any qr/.*/ => sub {
   template '404';
 };
