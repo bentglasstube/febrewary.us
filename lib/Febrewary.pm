@@ -5,6 +5,7 @@ use warnings;
 use lib 'lib';
 
 use Dancer ':syntax';
+use Dancer::Plugin::Database;
 
 our $VERSION = '0.1';
 
@@ -12,13 +13,22 @@ get '/' => sub {
   template 'index';
 };
 
-get '/rsvp' => sub {
-  template 'rsvp';
+get '/guests' => sub {
+  my $rsvps = [ database->quick_select('rsvp', {}) ];
+  my $sum = 0;
+  map { $sum += $_->{guests} } @$rsvps;
+
+  template 'guests', { rsvps => $rsvps, sum => $sum };
 };
 
-post '/rsvp' => sub {
-  # TODO save shit
-  template 'thanks';
+post '/guests' => sub {
+  database->quick_insert(
+    rsvp => {
+      name   => param('name'),
+      guests => param('count'),
+    });
+
+  redirect '/guests', 301;
 };
 
 any qr/.*/ => sub {
