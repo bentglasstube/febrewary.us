@@ -1,9 +1,4 @@
-body {
-  background: url('/background.jpg') center -1000px no-repeat;
-}
-
 #content {
-  background: rgba(255, 255, 255, 0.7);
   padding: 10px 20px;
 }
 
@@ -12,20 +7,10 @@ h1 {
   text-align: center;
 }
 
-form {
+.logo {
   text-align: center;
 }
 
-ul.nav {
+.rsvp {
   text-align: center;
-  width: 100%;
-  margin: auto;
-}
-
-ul.nav li {
-  display: inline;
-}
-
-ul.nav a {
-  display: inline;
 }

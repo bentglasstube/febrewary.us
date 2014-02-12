@@ -13,6 +13,8 @@ get '/' => sub {
   template 'index';
 };
 
+=ignore
+
 get '/guests' => sub {
   my $rsvps = [ database->quick_select('rsvp', {}) ];
   my $sum = 0;
@@ -51,8 +53,10 @@ get '/logos' => sub {
   template 'logos';
 };
 
+=cut
+
 any qr/.*/ => sub {
-  template '404';
+  template 'index';
 };
 
 true;
