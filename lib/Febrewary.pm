@@ -13,8 +13,6 @@ get '/' => sub {
   template 'index';
 };
 
-=ignore
-
 get '/guests' => sub {
   my $rsvps = [ database->quick_select('rsvp', {}) ];
   my $sum = 0;
@@ -36,6 +34,8 @@ post '/guests' => sub {
 
   redirect '/guests', 301;
 };
+
+=ignore
 
 get '/details' => sub {
   template 'details';
