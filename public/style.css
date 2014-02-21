@@ -14,3 +14,7 @@ h1 {
 .rsvp {
   text-align: center;
 }
+
+form {
+  margin: 1em 0;
+}
