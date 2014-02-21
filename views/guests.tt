@@ -1,4 +1,4 @@
-<h2>Guest List</h2>
+<h1>Guest List</h1>
 
 [% include 'rsvp.tt' %]
 
