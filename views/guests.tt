@@ -1,6 +1,7 @@
 <h2>Guest List</h2>
 
 <form method="post" action="/guests" role="form" class="form-inline">
+  <input type="hidden" name="showlist" value="1">
   <div class="form-group">
     <label for="name" class="sr-only">Name</label>
     <input type="text" class="form-control" id="name" name="name" placeholder="Name">
@@ -13,7 +14,7 @@
     <label for="count" class="sr-only">Number of Guests</label>
     <input type="number" class="form-control" id="count" name="count" placeholder="How many">
   </div>
-  <button type="submit" class="btn btn-primary">Add me</button>
+  <button type="submit" class="btn btn-primary">Add</button>
 </form>
 
 <table class="table">

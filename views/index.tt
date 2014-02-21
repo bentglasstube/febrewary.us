@@ -13,8 +13,20 @@
     who has the best shot at quitting his or her day job and starting a
     brewery.  Welllll maybe bring some snacks.<p>
 
-    <p class="rsvp"><a class="btn btn-primary" href="http://www.evite.com/event/03C35MIVJUXWLMYE4EPDSQRURJYTB4?gid=03C3Q7LFRI5E6ABQAEPDSQS3EJ6RYU">RSVP</a></p>
-
-    <p class="text-muted">Yes I know this website sucks, I will add more to it later</p>
+    <form method="post" action="/guests" role="form" class="form-inline">
+      <div class="form-group">
+        <label for="name" class="sr-only">Name</label>
+        <input type="text" class="form-control" id="name" name="name" placeholder="Name">
+      </div>
+      <div class="form-group">
+        <label for="email" class="sr-only">Email</label>
+        <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+      </div>
+      <div class="form-group">
+        <label for="count" class="sr-only">Number of Guests</label>
+        <input type="number" class="form-control" id="count" name="count" placeholder="How many">
+      </div>
+      <button type="submit" class="btn btn-primary">RSVP</button>
+    </form>
   </div>
 </div>

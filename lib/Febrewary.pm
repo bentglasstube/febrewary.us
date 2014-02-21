@@ -32,7 +32,11 @@ post '/guests' => sub {
       });
   }
 
-  redirect '/guests', 301;
+  redirect param('showlist') ? '/guests' : '/thanks', 301;
+};
+
+get '/thanks' => sub {
+  template 'thanks';
 };
 
 =ignore
