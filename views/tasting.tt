@@ -1,0 +1,82 @@
+[% NUM_BEERS = 4 %]
+
+<h1>Tasting Notes</h1>
+
+<form method="post" action="/tasting">
+
+[% if name %]
+  <input type="hidden" name="name" value="[% name %]">
+  <input type="hidden" name="beer" value="[% beer %]">
+
+  [% if beer > NUM_BEERS %]
+    <p>You're done!  Go enjoy some full sized beers or whatever.</p>
+  [% else %]
+    <h2>Beer #[% beer %]</h2>
+
+    [% macro slider(name, max, value) block %]
+      <input type="text" class="slider form-control"
+        id="[% name %]" name="[% name %]"
+        data-slider-max="[% max %]"
+        data-slider-value="[% value %]"
+      >
+    [% end %]
+
+    <div class="row">
+      <div class="col-md-4 form-group">
+        <label for="appearance">Appearance</label>
+        [% slider('appearance', 10, notes.$beer.appearance) %]
+      </div>
+
+      <div class="col-md-4 form-group">
+        <label for="smell">Smell</label>
+        [% slider('smell', 10, notes.$beer.smell) %]
+      </div>
+
+      <div class="col-md-4 form-group">
+        <label for="taste">Taste</label>
+        [% slider('taste', 30, notes.$beer.taste) %]
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4 form-group">
+        <label for="aftertaste">Aftertaste</label>
+        [% slider('aftertaste', 20, notes.$beer.aftertaste) %]
+      </div>
+
+      <div class="col-md-4 form-group">
+        <label for="drinkability">Drinkability</label>
+        [% slider('drinkability', 30, notes.$beer.drinkability) %]
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12 form-group">
+        <label for="notes">Notes</label>
+        <textarea id="notes" class="form-control" name="notes" rows="7">[% notes.$beer.notes %]</textarea>
+      </div>
+    </div>
+  [% end %]
+
+[% else %]
+
+  <p>To get started, enter your name:</p>
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input type="text" class="form-control" id="name" name="name">
+  </div>
+[% end %]
+
+[% if beer > 1 %]
+  <input class="btn btn-primary" type="submit" name="action" value="Previous">
+[% else %]
+  <a class="btn btn-primary disabled">Previous</a>
+[% end %]
+
+[% if beer <= NUM_BEERS %]
+  <input class="btn btn-primary" type="submit" name="action" value="Next">
+[% else %]
+  <a class="btn btn-primary" href="/tasting">Done</a>
+[% end %]
+
+</form>

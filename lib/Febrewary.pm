@@ -35,25 +35,48 @@ post '/guests' => sub {
   redirect '/guests', 301;
 };
 
-=ignore
+get '/tasting' => sub {
+  template 'tasting', { beer => 0 };
 
-get '/details' => sub {
-  template 'details';
 };
 
-get '/brewers' => sub {
-  template 'brewers';
-};
+post '/tasting' => sub {
+  if (my $name = param('name')) {
+    my $beer = param('beer') || 0;
 
-get '/photos' => sub {
-  template 'photos';
-};
+    if ($beer > 0 and $beer <= 4) {
+      my $sth = database->prepare(q{
+        INSERT OR REPLACE INTO notes (
+          name, beer,
+          appearance, smell, taste,
+          aftertaste, drinkability,
+          notes
+        ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)
+      });
 
-get '/logos' => sub {
-  template 'logos';
-};
+      $sth->execute(
+        $name, $beer,
+        param('appearance'), param('smell'), param('taste'),
+        param('aftertaste'), param('drinkability'),
+        param('notes')
+      );
+    } else {
+      # TODO check if name already submitted
+    }
 
-=cut
+    my $action = lc(param('action') || 'next');
+
+    $beer++ if $action eq 'next';
+    $beer-- if $action eq 'previous';
+
+    my @notes = database->quick_select('notes', { name => $name });
+    my %notes = map { $_->{beer} => $_ } @notes;
+
+    template 'tasting', { name => $name, beer => $beer, notes => \%notes };
+  } else {
+    template 'tasting', { beer => 0 };
+  }
+};
 
 any qr/.*/ => sub {
   template 'index';
