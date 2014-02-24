@@ -1,0 +1,32 @@
+<h1>Rankings</h1>
+
+<table class="table condensed">
+  <thead>
+    <tr>
+      <th>Rank</th>
+      <th>Beer</th>
+      <th class="right">Appearance</th>
+      <th class="right">Smell</th>
+      <th class="right">Taste</th>
+      <th class="right">Aftertaste</th>
+      <th class="right">Drinkability</th>
+      <th class="right">Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    [% rank = 1 %]
+    [% for beer in scores %]
+      <tr>
+        <td>[% rank %]</td>
+        <td>[% beer.name %]</td>
+        <td class="right">[% beer.appearance | format '%.1f' %]</td>
+        <td class="right">[% beer.smell | format '%.1f' %]</td>
+        <td class="right">[% beer.taste | format '%.1f' %]</td>
+        <td class="right">[% beer.aftertaste | format '%.1f' %]</td>
+        <td class="right">[% beer.drinkability | format '%.1f' %]</td>
+        <td class="right">[% beer.total | format '%.1f' %]</td>
+        [% rank = rank + 1 %]
+      </tr>
+    [% end %]
+  </tbody>
+</table>

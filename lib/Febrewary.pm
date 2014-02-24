@@ -7,6 +7,8 @@ use lib 'lib';
 use Dancer ':syntax';
 use Dancer::Plugin::Database;
 
+use List::Util 'sum';
+
 our $VERSION = '0.1';
 
 get '/' => sub {
@@ -37,7 +39,6 @@ post '/guests' => sub {
 
 get '/tasting' => sub {
   template 'tasting', { beer => 0 };
-
 };
 
 post '/tasting' => sub {
@@ -45,22 +46,22 @@ post '/tasting' => sub {
     my $beer = param('beer') || 0;
 
     if ($beer > 0 and $beer <= 4) {
-      my $sth = database->prepare(q{
+      my $sth = database->prepare(
+        q{
         INSERT OR REPLACE INTO notes (
           name, beer,
           appearance, smell, taste,
           aftertaste, drinkability,
           notes
         ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)
-      });
-
-      $sth->execute(
-        $name, $beer,
-        param('appearance'), param('smell'), param('taste'),
-        param('aftertaste'), param('drinkability'),
-        param('notes')
+      }
       );
+
+      $sth->execute($name, $beer,
+        param('appearance'), param('smell'), param('taste'),
+        param('aftertaste'), param('drinkability'), param('notes'));
     } else {
+
       # TODO check if name already submitted
     }
 
@@ -76,6 +77,41 @@ post '/tasting' => sub {
   } else {
     template 'tasting', { beer => 0 };
   }
+};
+
+get '/rankings' => sub {
+  my $sth = database->prepare(
+    q{
+    SELECT
+      beer,
+      avg(appearance), avg(smell), avg(taste),
+      avg(aftertaste), avg(drinkability)
+    FROM notes
+    GROUP BY beer
+    }
+  );
+  $sth->execute();
+
+  my %beers = ();
+  my @keys  = qw(appearance smell taste aftertaste drinkability);
+  while (my ($beer, @data) = $sth->fetchrow_array()) {
+    @{ $beers{$beer} }{@keys} = @data;
+    $beers{$beer}{total} = sum(@data) || 0;
+
+    debug("Total is $beers{$beer}{total}");
+  }
+
+  # Manually enter names for now
+  $beers{1}{name} = 'Lady Time';
+  $beers{2}{name} = 'Black As Your Soul';
+  $beers{3}{name} = 'Vanilla Porter';
+  $beers{4}{name} = 'Note Doge';
+
+  # $beers{5}{name} = 'Hoffert';
+
+  my @scores = reverse sort { $a->{total} <=> $b->{total} } values %beers;
+
+  template 'rankings', { scores => \@scores };
 };
 
 any qr/.*/ => sub {

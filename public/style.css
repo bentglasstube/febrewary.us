@@ -22,3 +22,7 @@ form {
 .slider {
   width: 90%;
 }
+
+.right {
+  text-align: right;
+}
