@@ -7,7 +7,7 @@ use lib 'lib';
 use Dancer ':syntax';
 use Dancer::Plugin::Database;
 
-use List::Util 'sum';
+use List::Util 'sum0';
 
 our $VERSION = '0.1';
 
@@ -95,10 +95,13 @@ get '/rankings' => sub {
     q{
     SELECT
       beers.name,
-      avg(notes.appearance), avg(notes.smell), avg(notes.taste),
-      avg(notes.aftertaste), avg(notes.drinkability)
+      avg(notes.appearance),
+      avg(notes.smell),
+      avg(notes.taste),
+      avg(notes.aftertaste),
+      avg(notes.drinkability)
     FROM beers
-    INNER JOIN notes ON notes.beer = beers.id
+    LEFT JOIN notes ON notes.beer = beers.id
     GROUP BY beers.id
     }
   );
@@ -108,9 +111,14 @@ get '/rankings' => sub {
   my @keys  = qw(appearance smell taste aftertaste drinkability);
   while (my ($beer, @data) = $sth->fetchrow_array()) {
     @{ $beers{$beer} }{@keys} = @data;
-    $beers{$beer}{total} = sum(@data) || 0;
+    $beers{$beer}{name} = $beer;
 
-    debug("Total is $beers{$beer}{total}");
+    # Multipliers for important aspects
+    $data[2] *= 3; # taste
+    $data[3] *= 2; # aftertaste
+    $data[4] *= 3; # drinkability
+
+    $beers{$beer}{total} = sum0(@data);
   }
 
   my @scores = reverse sort { $a->{total} <=> $b->{total} } values %beers;
