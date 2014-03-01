@@ -12,17 +12,10 @@
   </head>
   <body>
     <div class="container" id="content">
-      <div class="row">
-        <div class="logo col-md-4"><img src="/logo2.png"></div>
-        <div class="col-md-8">
-          [% content %]
-        </div>
-      </div>
+      [% content %]
     </div>
 
     <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-    <script src="/bootstrap-slider.js"></script>
-    <script src="/site.js"></script>
   </body>
 </html>

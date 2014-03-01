@@ -1,5 +1,3 @@
-[% NUM_BEERS = 4 %]
-
 <h1>Tasting Notes</h1>
 
 <form method="post" action="/tasting">
@@ -8,47 +6,35 @@
   <input type="hidden" name="name" value="[% name %]">
   <input type="hidden" name="beer" value="[% beer %]">
 
-  [% if beer > NUM_BEERS %]
+  [% if beer > beer_count %]
     <p>You're done!  Go enjoy some full sized beers or whatever.</p>
   [% else %]
     <h2>Beer #[% beer %]</h2>
 
-    [%- macro slider(name, max) block -%]
-      [%- default value = max / 2 -%]
-      <input type="text" class="slider form-control"
-        id="[% name %]"
-        data-slider-max="[% max %]"
-        data-slider-value="[% value %]">
-      <input type="hidden" id="[% name %]-value" name="[% name %]" value="[% value %]">
+    [%- macro slider(name) block -%]
+      [%- default value = 5 -%]
+      <div class="col-md-4 form-group">
+        <label class="attribute" for="[% name %]">[% name.ucfirst %]</label>
+        <label>0</label>
+        [% for val in [0 .. 10] %]
+          <input type="radio" name="[% name %]" value="[% val %]"[% if val == value %] checked[% end %]>
+        [% end %]
+        <label>10</label>
+      </div>
     [%- end -%]
 
     <div class="row">
-      <div class="col-md-4 form-group">
-        <label for="appearance">Appearance</label>
-        [% slider('appearance', 10, value = notes.$beer.appearance) %]
-      </div>
-
-      <div class="col-md-4 form-group">
-        <label for="smell">Smell</label>
-        [% slider('smell', 10, value = notes.$beer.smell) %]
-      </div>
-
-      <div class="col-md-4 form-group">
-        <label for="taste">Taste</label>
-        [% slider('taste', 30, value = notes.$beer.taste) %]
-      </div>
+      [% slider('appearance', value = notes.$beer.appearance) %]
+      [% slider('smell', value = notes.$beer.smell) %]
+      [% slider('taste', value = notes.$beer.taste) %]
     </div>
 
     <div class="row">
-      <div class="col-md-4 form-group">
-        <label for="aftertaste">Aftertaste</label>
-        [% slider('aftertaste', 20, value = notes.$beer.aftertaste) %]
-      </div>
+      [% slider('aftertaste', value = notes.$beer.aftertaste) %]
+      [% slider('drinkability', value = notes.$beer.drinkability) %]
+    </div>
 
-      <div class="col-md-4 form-group">
-        <label for="drinkability">Drinkability</label>
-        [% slider('drinkability', 30, value = notes.$beer.drinkability) %]
-      </div>
+    <div class="row">
     </div>
 
     <div class="row">
@@ -74,7 +60,7 @@
   <a class="btn btn-primary disabled">Previous</a>
 [% end %]
 
-[% if beer <= NUM_BEERS %]
+[% if beer <= beer_count %]
   <input class="btn btn-primary" type="submit" name="action" value="Next">
 [% else %]
   <a class="btn btn-primary" href="/tasting">Done</a>

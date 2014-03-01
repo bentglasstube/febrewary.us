@@ -1,0 +1,29 @@
+[% foreach beer in beers %]
+  <h2>
+    [% beer.name %]
+    <small>[% beer.style %] by [% beer.brewer %]</small>
+  </h2>
+  <p>[% beer.description %]</p>
+  <hr>
+[% end %]
+
+<h2>Add Beer</h2>
+<form method="post" action="/beers">
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input type="text" class="form-control" id="name" name="name">
+  </div>
+  <div class="form-group">
+    <label for="style">Style</label>
+    <input type="text" class="form-control" id="style" name="style">
+  </div>
+  <div class="form-group">
+    <label for="brewer">Brewer</label>
+    <input type="text" class="form-control" id="brewer" name="brewer">
+  </div>
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea class="form-control" rows="10" name="description" id="description"></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">Add Beer</button>
+</form>

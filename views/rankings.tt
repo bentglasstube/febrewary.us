@@ -30,3 +30,7 @@
     [% end %]
   </tbody>
 </table>
+
+<script type="text/javascript">
+  setTimeout(function() { location.reload(); }, 10000);
+</script>
