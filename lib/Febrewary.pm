@@ -11,9 +11,47 @@ use List::Util 'sum0';
 
 our $VERSION = '0.1';
 
+sub get_beer {
+  my ($id) = @_;
+
+  my $beer = database->quick_select('beers', { id => $id }) or return undef;
+  my @notes = database->quick_select('notes', { beer => $id });
+
+  my $count = 0;
+  my @attrs = qw(appearance smell taste aftertaste drinkability);
+
+  foreach my $note (@notes) {
+    $count++;
+    $beer->{$_} += $note->{$_} for @attrs;
+    if ($note->{notes}) {
+      $beer->{notes} ||= [];
+      push @{$beer->{notes}}, $note->{notes};
+    }
+  }
+
+  $beer->{$_} /= $count for @attrs;
+
+  # weighted total score
+  $beer->{total} =
+    1 * $beer->{appearance} +
+    1 * $beer->{smell} +
+    3 * $beer->{taste} +
+    2 * $beer->{aftertaste} +
+    3 * $beer->{drinkability};
+
+  return $beer;
+}
+
+sub get_all_beers {
+  return map get_beer($_), 1 .. 5;
+}
+
 get '/' => sub {
-  template 'index';
+  # party is over so show results
+  redirect '/results';
 };
+
+=ignore
 
 get '/guests' => sub {
   my $rsvps = [ database->quick_select('rsvp', {}) ];
@@ -90,48 +128,14 @@ post '/tasting' => sub {
   }
 };
 
-get '/rankings' => sub {
-  my $sth = database->prepare(
-    q{
-    SELECT
-      beers.name,
-      avg(notes.appearance),
-      avg(notes.smell),
-      avg(notes.taste),
-      avg(notes.aftertaste),
-      avg(notes.drinkability)
-    FROM beers
-    LEFT JOIN notes ON notes.beer = beers.id
-    GROUP BY beers.id
-    }
-  );
-  $sth->execute();
-
-  my %beers = ();
-  my @keys  = qw(appearance smell taste aftertaste drinkability);
-  while (my ($beer, @data) = $sth->fetchrow_array()) {
-    @{ $beers{$beer} }{@keys} = @data;
-    $beers{$beer}{name} = $beer;
-
-    # Multipliers for important aspects
-    $data[2] *= 3; # taste
-    $data[3] *= 2; # aftertaste
-    $data[4] *= 3; # drinkability
-
-    $beers{$beer}{total} = sum0(@data);
-  }
-
-  my @scores = reverse sort { $a->{total} <=> $b->{total} } values %beers;
-
-  template 'rankings', { scores => \@scores };
-};
+=cut
 
 get '/beers' => sub {
-  my @beers = database->quick_select('beers', {});
-
+  my @beers = get_all_beers;
   template 'beers', { beers => \@beers };
 };
 
+=ignore
 post '/beers' => sub {
   database->quick_insert(
     'beers', {
@@ -143,9 +147,20 @@ post '/beers' => sub {
 
   redirect '/beers', 301;
 };
+=cut
+
+get '/beers/:id' => sub {
+  my $beer = get_beer(param('id')) or redirect '/beers';
+  template 'beer', { beer => $beer };
+};
+
+get '/results' => sub {
+  my @beers = reverse sort { $a->{total} <=> $b->{total} } get_all_beers;
+  template 'postmortem', { beers => \@beers };
+};
 
 any qr/.*/ => sub {
-  template 'index';
+  redirect '/';
 };
 
 true;

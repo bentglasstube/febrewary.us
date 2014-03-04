@@ -1,12 +1,13 @@
 [% foreach beer in beers %]
   <h2>
-    [% beer.name %]
+    <a href="/beers/[% beer.id %]">[% beer.name %]</a>
     <small>[% beer.style %] by [% beer.brewer %]</small>
   </h2>
   <p>[% beer.description %]</p>
   <hr>
 [% end %]
 
+<!-- No more adding beers
 <h2>Add Beer</h2>
 <form method="post" action="/beers">
   <div class="form-group">
@@ -27,3 +28,4 @@
   </div>
   <button type="submit" class="btn btn-primary">Add Beer</button>
 </form>
+-->

@@ -1,0 +1,47 @@
+<h1>Results</h1>
+
+<p>First of all I want to thank everyone that came.  The party was, in my
+opinion, a huge success, and I hope everyone had fun.</p>
+
+[% macro beer(beer, place) block %]
+  <h3>[% place %] Place - [% beer.name %]</h3>
+
+  <div class="row">
+    <div class="col-md-6">
+      <strong>Brewer</strong>          [% beer.brewer %]
+    </div>
+    <div class="col-md-6">
+      <strong>Style</strong>           [% beer.style %]
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <strong>Appearance</strong>      [% beer.appearance   * 10 | format ('%.1f%%') %]
+    </div>
+    <div class="col-md-6">
+      <strong>Smell</strong>           [% beer.smell        * 10 | format ('%.1f%%') %]
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <strong>Taste</strong>           [% beer.taste        * 10 | format ('%.1f%%') %]
+    </div>
+    <div class="col-md-6">
+      <strong>Aftertaste</strong>      [% beer.aftertaste   * 10 | format ('%.1f%%') %]
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <strong>Drinkability</strong>    [% beer.drinkability * 10 | format ('%.1f%%') %]
+    </div>
+    <div class="col-md-6">
+      <strong>Total</strong>           [% beer.total        | format ('%.1f%%') %]
+    </div>
+  </div>
+[% end %]
+
+[% beer(beers.4, '5th') %]
+[% beer(beers.3, '4th') %]
+[% beer(beers.2, '3rd') %]
+[% beer(beers.1, '2nd') %]
+[% beer(beers.0, '1st') %]

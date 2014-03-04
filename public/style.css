@@ -30,3 +30,8 @@ form {
 .attribute {
   display: block;
 }
+
+.col-md-6 strong {
+  width: 7em;
+  display: inline-block;
+}
